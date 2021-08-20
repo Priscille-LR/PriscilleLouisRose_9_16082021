@@ -83,6 +83,7 @@ export default () => {
       divIcon2.classList.remove('active-icon')
       const bills = new Bills({ document, onNavigate, firestore, localStorage  })
       bills.getBills().then(data => {
+        console.log({data})
         rootDiv.innerHTML = BillsUI({ data })
         const divIcon1 = document.getElementById('layout-icon1')
         const divIcon2 = document.getElementById('layout-icon2')
@@ -90,6 +91,7 @@ export default () => {
         divIcon2.classList.remove('active-icon')
         new Bills({ document, onNavigate, firestore, localStorage })
       }).catch(error => {
+        console.log({error})
         rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, error })
       })
     } else if (window.location.hash === ROUTES_PATH['NewBill']) {

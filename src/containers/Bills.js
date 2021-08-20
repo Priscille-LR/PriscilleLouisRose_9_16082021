@@ -31,15 +31,16 @@ export default class {
   getBills = () => {
     const userEmail = localStorage.getItem('user') ?
       JSON.parse(localStorage.getItem('user')).email : ""
-    if (this.firestore) {
+    if (this.firestore) { 
       return this.firestore
-      .bills()
+      .bills() 
       .get()
-      .then(snapshot => {
+      .then(snapshot => { 
         const bills = snapshot.docs
+          .sort((a, b) => ((a.data().date < b.data().date) ? 1 : -1))
           .map(doc => {
             try {
-              return {
+              return { 
                 ...doc.data(),
                 date: formatDate(doc.data().date),
                 status: formatStatus(doc.data().status)
@@ -55,10 +56,13 @@ export default class {
               }
             }
           })
-          .filter(bill => bill.email === userEmail)
+          .filter(bill => bill.email === userEmail)  
+          //.sort((a, b) => ((a.date < b.date) ? 1 : -1))
           console.log('length', bills.length)
+          console.log(bills)
         return bills
       })
+
       .catch(error => error)
     }
   }

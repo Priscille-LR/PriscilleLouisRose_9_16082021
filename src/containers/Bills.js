@@ -34,6 +34,7 @@ export default class {
     if (this.firestore) { 
       return this.firestore
       .bills() 
+      //.where('email', '==', userEmail)
       .get()
       .then(snapshot => { 
         const bills = snapshot.docs
@@ -56,7 +57,7 @@ export default class {
               }
             }
           })
-          .filter(bill => bill.email === userEmail)  
+          
           //.sort((a, b) => ((a.date < b.date) ? 1 : -1))
           console.log('length', bills.length)
           console.log(bills)

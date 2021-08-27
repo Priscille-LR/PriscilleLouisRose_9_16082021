@@ -5,40 +5,38 @@
 import '@testing-library/jest-dom'
 import { screen } from "@testing-library/dom"
 import { getByTestId } from '@testing-library/dom'
-
+import { Bills } from "../containers/Bills.js";
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
 import Router from '../app/Router.js'
 
 import { localStorageMock } from "../__mocks__/localStorage.js"
-
+import firestore from '../app/Firestore.js'
+import { ROUTES_PATH } from '../constants/routes.js'
+import { setLocalStorage } from '../constants/utils.js'
 
 describe("Given I am connected as an employee", () => {
+  //define user type in local storage => employee
+  setLocalStorage('Employee')
   describe("When I am on Bills Page", () => {
     it("bill icon in vertical layout should be highlighted", () => {
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-      const user = JSON.stringify({
-        type: 'Employee'
-      })
-      window.localStorage.setItem('user', user)
+
+      jest.mock('../app/Firestore.js'); //mock firestore (all functions)
+      //override bills behaviour w/ new function
+      firestore.bills = () => ({ bills, get: jest.fn().mockResolvedValue() }) //new function returns bills (collection ref : doc data) bills => fixture
+
+      //mock current page
+      Object.defineProperty(window, 'location', { value: { hash: ROUTES_PATH['Bills'] } })
+
       const html = BillsUI({ data: [] })
-      //const html = VerticalLayout(120)
-      //document.body.innerHTML = html
       document.body.innerHTML = `
       <div id="root">${html}</div>
       `;
-      console.log(document.body.innerHTML);
 
-    //  Router();
-    //   window.location.pathname 
-    //   document.location = '/#employee/bills'
+      Router();
 
-    console.log(screen.getByTestId('icon-window'));
-      expect(screen.getByTestId('icon-window')).toHaveAttribute('active-icon')
+      expect(screen.getByTestId('icon-window')).toHaveClass('active-icon')
     })
-
-      
-  })
 
     // it("Then bills should be ordered from earliest to latest", () => {
     //   const html = BillsUI({ data: bills })
@@ -49,6 +47,6 @@ describe("Given I am connected as an employee", () => {
     //   expect(dates).toEqual(datesSorted)
     // })
 
-  
 
+  })
 })

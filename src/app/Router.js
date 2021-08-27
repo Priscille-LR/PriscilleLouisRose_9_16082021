@@ -22,41 +22,16 @@ export default () => {
     )
     if (pathname === ROUTES_PATH['Login']) {
       rootDiv.innerHTML = ROUTES({ pathname })
-      document.body.style.backgroundColor="#0E5AE5"
-      new Login({ document, localStorage, onNavigate, PREVIOUS_LOCATION, firestore })
+      renderLogin()
     } else if (pathname === ROUTES_PATH['Bills']) {
       rootDiv.innerHTML = ROUTES({ pathname, loading: true })
-      const divIcon1 = document.getElementById('layout-icon1')
-      const divIcon2 = document.getElementById('layout-icon2')
-      divIcon1.classList.add('active-icon')
-      divIcon2.classList.remove('active-icon')
-      const bills = new Bills({ document, onNavigate, firestore, localStorage  })
-      bills.getBills().then(data => {
-        rootDiv.innerHTML = BillsUI({ data })
-        const divIcon1 = document.getElementById('layout-icon1')
-        const divIcon2 = document.getElementById('layout-icon2')
-        divIcon1.classList.add('active-icon')
-        divIcon2.classList.remove('active-icon')
-        new Bills({ document, onNavigate, firestore, localStorage })
-      }).catch(error => {
-        rootDiv.innerHTML = ROUTES({ pathname, error })
-      })
+      renderBills(rootDiv, pathname)
     } else if (pathname === ROUTES_PATH['NewBill']) {
       rootDiv.innerHTML = ROUTES({ pathname, loading: true })
-      new NewBill({ document, onNavigate, firestore, localStorage })
-      const divIcon1 = document.getElementById('layout-icon1')
-      const divIcon2 = document.getElementById('layout-icon2')
-      divIcon1.classList.remove('active-icon')
-      divIcon2.classList.add('active-icon')
+      renderNewBill()
     } else if (pathname === ROUTES_PATH['Dashboard']) {
       rootDiv.innerHTML = ROUTES({ pathname, loading: true })
-      const bills = new Dashboard({ document, onNavigate, firestore, bills: [], localStorage })
-      bills.getBillsAllUsers().then(bills => {
-        rootDiv.innerHTML = DashboardUI({ data: { bills } })
-        new Dashboard({ document, onNavigate, firestore, bills, localStorage })
-      }).catch(error => {
-        rootDiv.innerHTML = ROUTES({ pathname, error })
-      })
+      renderDashboard(rootDiv, pathname)
     }
   }
   
@@ -72,47 +47,66 @@ export default () => {
   }
 
   if (window.location.pathname === "/" && window.location.hash === "") {
-    new Login({ document, localStorage, onNavigate, PREVIOUS_LOCATION, firestore })
-    document.body.style.backgroundColor="#0E5AE5"
+    renderLogin()
   } else if (window.location.hash !== "") {
     if (window.location.hash === ROUTES_PATH['Bills']) {
       rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, loading: true })
-      const divIcon1 = document.getElementById('layout-icon1')
-      const divIcon2 = document.getElementById('layout-icon2')
-      divIcon1.classList.add('active-icon')
-      divIcon2.classList.remove('active-icon')
-      const bills = new Bills({ document, onNavigate, firestore, localStorage  })
-      bills.getBills().then(data => {
-        console.log({data})
-        rootDiv.innerHTML = BillsUI({ data })
-        const divIcon1 = document.getElementById('layout-icon1')
-        const divIcon2 = document.getElementById('layout-icon2')
-        divIcon1.classList.add('active-icon')
-        divIcon2.classList.remove('active-icon')
-        new Bills({ document, onNavigate, firestore, localStorage })
-      }).catch(error => {
-        console.log({error})
-        rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, error })
-      })
+      renderBills(rootDiv, window.location.hash)
     } else if (window.location.hash === ROUTES_PATH['NewBill']) {
       rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, loading: true })
-      new NewBill({ document, onNavigate, firestore, localStorage })
-      const divIcon1 = document.getElementById('layout-icon1')
-      const divIcon2 = document.getElementById('layout-icon2')
-      divIcon1.classList.remove('active-icon')
-      divIcon2.classList.add('active-icon')
+      renderNewBill()
     } else if (window.location.hash === ROUTES_PATH['Dashboard']) {
-      rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, loading: true })
-      const bills = new Dashboard({ document, onNavigate, firestore, bills: [], localStorage })
-      bills.getBillsAllUsers().then(bills => {
-        rootDiv.innerHTML = DashboardUI({ data: { bills } })
-        new Dashboard({ document, onNavigate, firestore, bills, localStorage })
-      }).catch(error => {
-        rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, error })
-      })
+      renderDashboard(rootDiv, window.location.hash)
+
     }
   }
 
   return null
 }
  
+function renderDashboard(rootDiv, pathname) {
+  const bills = new Dashboard({ document, onNavigate, firestore, bills: [], localStorage })
+  bills.getBillsAllUsers().then(bills => {
+    rootDiv.innerHTML = DashboardUI({ data: { bills } })
+    new Dashboard({ document, onNavigate, firestore, bills, localStorage })
+  }).catch(error => {
+    rootDiv.innerHTML = ROUTES({ pathname, error })
+  })
+}
+
+function renderNewBill() {
+  new NewBill({ document, onNavigate, firestore, localStorage })
+  highlightIconMail()
+}
+
+function renderBills(rootDiv, pathname) {
+  highlightIconWindow()
+  const bills = new Bills({ document, onNavigate, firestore, localStorage })
+  bills.getBills().then(data => {
+    rootDiv.innerHTML = BillsUI({ data })
+    highlightIconWindow()
+    new Bills({ document, onNavigate, firestore, localStorage })
+  }).catch(error => {
+    rootDiv.innerHTML = ROUTES({ pathname, error })
+  })
+}
+
+function renderLogin() {
+  new Login({ document, localStorage, onNavigate, PREVIOUS_LOCATION, firestore })
+  document.body.style.backgroundColor = "#0E5AE5"
+}
+
+function highlightIconMail() {
+  const divIcon1 = document.getElementById('layout-icon1')
+  const divIcon2 = document.getElementById('layout-icon2')
+  divIcon1.classList.remove('active-icon')
+  divIcon2.classList.add('active-icon')
+}
+
+function highlightIconWindow() {
+  const divIcon1 = document.getElementById('layout-icon1')
+  const divIcon2 = document.getElementById('layout-icon2')
+  divIcon1.classList.add('active-icon')
+  divIcon2.classList.remove('active-icon')
+}
+

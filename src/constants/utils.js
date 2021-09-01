@@ -6,5 +6,4 @@ export function setLocalStorage(userType) {
     type: userType,
     email: 'user@email.com'
   }))
-
 }

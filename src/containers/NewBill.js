@@ -4,6 +4,7 @@ import Logout from "./Logout.js"
 
 export default class NewBill {
   constructor({ document, onNavigate, firestore, localStorage }) {
+    this.formatError = false
     this.document = document
     this.onNavigate = onNavigate
     this.firestore = firestore
@@ -21,6 +22,7 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
     const fileExtension = file.name.split('.').pop()
 
+    //if(['jpg', 'jpeg' || 'png']).includes(files)
     if(fileExtension == ('jpg' || 'jpeg' || 'png')) {
       this.firestore
         .storage
@@ -32,6 +34,9 @@ export default class NewBill {
           this.fileName = fileName
         })
     } else {
+      this.formatError = true
+      this.fileUrl = null;
+      this.document.querySelector(`input[data-testid="file"]`).value = '' // reset field
       alert("seuls les formats jpg, jpeg et png sont acceptés")
     }
   }
@@ -53,8 +58,10 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
-    this.createBill(bill)
-    this.onNavigate(ROUTES_PATH['Bills'])
+    if(!this.formatError) {
+      this.createBill(bill)
+      this.onNavigate(ROUTES_PATH['Bills'])
+    }
   }
 
   // not need to cover this function by tests

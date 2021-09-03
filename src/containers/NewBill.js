@@ -22,8 +22,8 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
     const fileExtension = file.name.split('.').pop()
 
-    //if(['jpg', 'jpeg' || 'png']).includes(files)
-    if(fileExtension == ('jpg' || 'jpeg' || 'png')) {
+    if(['jpg','jpeg','png'].includes(fileExtension)) {
+    //if(fileExtension == ('jpg' || 'jpeg' || 'png')) {
       this.firestore
         .storage
         .ref(`justificatifs/${fileName}`)
@@ -43,7 +43,6 @@ export default class NewBill {
 
   handleSubmit = e => {
     e.preventDefault()
-    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
@@ -65,6 +64,7 @@ export default class NewBill {
   }
 
   // not need to cover this function by tests
+    /* istanbul ignore next */
   createBill = (bill) => {
     if (this.firestore) {
       this.firestore

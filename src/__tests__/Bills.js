@@ -30,7 +30,6 @@ describe("Given I am connected as an employee", () => {
 
     //LAYOUT BILL ICON
     test("Then bill icon in vertical layout should be highlighted", () => {
-      //GIVEN
       jest.mock('../app/Firestore.js'); //mock firestore (all functions)
       //override bills behaviour w/ new function
       firestore.bills = () => ({
@@ -42,12 +41,10 @@ describe("Given I am connected as an employee", () => {
       //mock current page
       Object.defineProperty(window, 'location', { value: { hash: ROUTES_PATH['Bills'] } })
 
-      //WHEN
       const html = BillsUI({ data: [] })
       document.body.innerHTML = `<div id="root">${html}</div>`;
       Router();
 
-      //THEN
       expect(screen.getByTestId('icon-window')).toHaveClass('active-icon')
     })
 
@@ -96,9 +93,13 @@ describe("Given I am connected as an employee", () => {
 
       //create mock class
       const testBills = new Bills({ document, onNavigate, firestore: null, localStorage: window.localStorage })
+      
       //mock function
-      const testHandleClickNewBill = jest.fn()
-      testBills.handleClickNewBill =  testHandleClickNewBill
+      const testHandleClickNewBill = jest.fn(() => testBills.handleClickNewBill)
+      
+      // const testHandleClickNewBill = jest.fn()
+      // testBills.handleClickNewBill =  testHandleClickNewBill
+      
 
       const newBillBtn = screen.getByTestId('btn-new-bill')
       newBillBtn.addEventListener('click', testHandleClickNewBill)
@@ -115,12 +116,11 @@ describe("Given I am connected as an employee", () => {
       new Bills({ document, onNavigate, firestore: null, localStorage: window.localStorage })
   
       const newBillBtn = screen.getByTestId('btn-new-bill')
+      //newBillBtn.addEventListener('click', testHandleClickNewBill)
       userEvent.click(newBillBtn)
 
-      //const title = screen.getAllByText("Envoyer une note de frais")
       const title = document.querySelector('.content-title')
       const form = screen.getByTestId("form-new-bill")
-      //expect(title).toBeTruthy()
       expect(title).toHaveTextContent("Envoyer une note de frais")
       expect(form).toBeTruthy()
     })

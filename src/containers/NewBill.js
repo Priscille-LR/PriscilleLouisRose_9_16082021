@@ -22,8 +22,7 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
     const fileExtension = file.name.split('.').pop()
 
-    if(['jpg','jpeg','png'].includes(fileExtension)) {
-    //if(fileExtension == ('jpg' || 'jpeg' || 'png')) {
+    if(['jpg','jpeg','png'].includes(fileExtension)) { //prevent formats other than jpg/jpeg/png
       this.firestore
         .storage
         .ref(`justificatifs/${fileName}`)

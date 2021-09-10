@@ -12,7 +12,7 @@ import firestore from '../app/Firestore.js'
 import { ROUTES_PATH, ROUTES } from '../constants/routes.js'
 import { setLocalStorage } from '../constants/utils.js'
 import userEvent from '@testing-library/user-event';
-import firebase from '../__mocks__/firebase'
+import firebase, { nestedGetSpy } from '../__mocks__/firebase'
 
 
 //define user type in local storage => employee
@@ -191,28 +191,46 @@ describe("Given I am connected as an employee", () => {
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills Page", () => {
     test("fetches bills from mock API GET", async () => {
-       const getSpy = jest.spyOn(firebase, "get")
-       const bills = await firebase.get()
-       expect(getSpy).toHaveBeenCalledTimes(1)
-       expect(bills.data.length).toBe(4)
+       const bills = await new Bills({ document, onNavigate, firestore: firebase, localStorage: window.localStorage }).getBills() //returned: bills
+       expect(nestedGetSpy).toHaveBeenCalledTimes(1)
+       expect(bills.length).toBe(4)
     })
+
+
     test("fetches bills from an API and fails with 404 message error", async () => {
-      firebase.get.mockImplementationOnce(() =>
-        Promise.reject(new Error("Erreur 404"))
-      )
+      // firebase.get.mockImplementationOnce(() =>
+      //   Promise.reject(new Error("Erreur 404"))
+      // )
       const html = BillsUI({ error: "Erreur 404" })
       document.body.innerHTML = html
-      const message = await screen.getByText(/Erreur 404/)
+      const message = await screen.getByText(/Erreur 404/) //depends only from bills UI and not firebase
       expect(message).toBeTruthy()
     })
     test("fetches messages from an API and fails with 500 message error", async () => {
-      firebase.get.mockImplementationOnce(() =>
-        Promise.reject(new Error("Erreur 500"))
-      )
+      // firebase.get.mockImplementationOnce(() =>
+      //   Promise.reject(new Error("Erreur 500"))
+      // )
       const html = BillsUI({ error: "Erreur 500" })
       document.body.innerHTML = html
       const message = await screen.getByText(/Erreur 500/)
       expect(message).toBeTruthy()
     })
+
+
+    // test("returns an error from API; it fails with 404 message error", async () => {
+    //   nestedGetSpy.mockImplementationOnce(() => Promise.reject(new Error("Erreur 404")));
+    //   const result = await new Bills({ document, onNavigate, firestore: firebase, localStorage: window.localStorage }).getBills()
+    //   expect(nestedGetSpy).toHaveBeenCalledTimes(1)
+    //   expect(result).toEqual(new Error("Erreur 404"))
+    
+    // })
+
+    // test("returns an error from API; it fails with 500 message error", async () => {
+    //   nestedGetSpy.mockImplementationOnce(() => Promise.reject(new Error("Erreur 500")));
+    //   const result = await new Bills({ document, onNavigate, firestore: firebase, localStorage: window.localStorage }).getBills()
+    //   expect(nestedGetSpy).toHaveBeenCalledTimes(1)
+    //   expect(result).toEqual(new Error("Erreur 500"))
+    
+    // })
   })
 })

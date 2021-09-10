@@ -10,7 +10,7 @@ export const bills = [{
   "date": "2004-04-04",
   "amount": 400,
   "commentAdmin": "ok",
-  "email": "a@a",
+  "email": "cedric.hiely@billed.com",
   "pct": 20
 },
 {
@@ -22,7 +22,7 @@ export const bills = [{
   "commentary": "plop",
   "pct": 20,
   "type": "Transports",
-  "email": "a@a",
+  "email": "cedric.hiely@billed.com",
   "fileUrl": "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…61.jpeg?alt=media&token=7685cd61-c112-42bc-9929-8a799bb82d8b",
   "date": "2001-01-01",
   "status": "refused",
@@ -31,7 +31,7 @@ export const bills = [{
 {
   "id": "UIUZtnPQvnbFnB0ozvJh",
   "name": "test3",
-  "email": "a@a",
+  "email": "cedric.hiely@billed.com",
   "type": "Services en ligne",
   "vat": "60",
   "pct": 20,
@@ -48,7 +48,7 @@ export const bills = [{
   "status": "refused",
   "pct": 20,
   "amount": 200,
-  "email": "a@a",
+  "email": "cedric.hiely@billed.com",
   "name": "test2",
   "vat": "40",
   "fileName": "preview-facture-free-201801-pdf-1.jpg",

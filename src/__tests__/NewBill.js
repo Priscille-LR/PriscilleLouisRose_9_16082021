@@ -99,22 +99,45 @@ describe("Given I am connected as an employee", () => {
     //SUBMIT FORM & FUNCTION CALL
 
     describe("When I click on Submit and the form is valid", () => {
+
+      describe('And there is a format error', () => {
+        test('bill should not be created', () => {
+          const html = NewBillUI()
+          document.body.innerHTML = html
+
+          const testNewBill = new NewBill({ document, onNavigate, firestore: null, localStorage: window.localStorage })
+
+          jest.spyOn(testNewBill, 'createBill')
+          jest.spyOn(testNewBill, 'onNavigate')
+          const testHandleSubmit = jest.fn(() => testNewBill.handleSubmit)
+
+          const form = screen.getByTestId("form-new-bill")
+          form.addEventListener("submit", testHandleSubmit);
+          testNewBill.formatError = true;
+          fireEvent.submit(form)
+
+          expect(testNewBill.createBill).not.toHaveBeenCalled()
+          expect(testNewBill.onNavigate).not.toHaveBeenCalled()
+        })
+      });
+
       test("Then a new bill should be created", async () => {
 
         const html = NewBillUI()
         document.body.innerHTML = html
 
         const testNewBill = new NewBill({ document, onNavigate, firestore: null, localStorage: window.localStorage })
-
+        jest.spyOn(testNewBill, 'createBill')
+        jest.spyOn(testNewBill, 'onNavigate')
         const testHandleSubmit = jest.fn(() => testNewBill.handleSubmit)
 
         const form = screen.getByTestId("form-new-bill")
         form.addEventListener("submit", testHandleSubmit);
         fireEvent.submit(form)
 
-        //testNewBill.createBill = (newBill) => newBill
-
         expect(testHandleSubmit).toHaveBeenCalled()
+        expect(testNewBill.createBill).toHaveBeenCalled()
+        expect(testNewBill.onNavigate).toHaveBeenCalled()
       })
     })
   })

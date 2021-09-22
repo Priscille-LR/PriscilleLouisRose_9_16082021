@@ -111,12 +111,51 @@ describe("Given that I am a user on login page", () => {
 
 
 
-
-
-
-
-
     //test line 27-44
+
+    describe("When user exists", () => { 
+      test("Then user should not be created", () => {
+        document.body.innerHTML = LoginUI()
+  
+        // localStorage should be populated with form data
+        Object.defineProperty(window, "localStorage", {
+          value: {
+            getItem: jest.fn(() => null),
+            setItem: jest.fn(() => null)
+          },
+          writable: true
+        })
+  
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+  
+        let PREVIOUS_LOCATION = ''
+  
+        const firebase = jest.fn()
+  
+        const login = new Login({
+          document,
+          localStorage: window.localStorage,
+          onNavigate,
+          PREVIOUS_LOCATION,
+          firebase
+        })
+  
+        const checkIfUserExists = jest.fn()
+        login.checkIfUserExists = checkIfUserExists
+        checkIfUserExists.mockImplementation(() => true)
+  
+        const createUser = jest.fn()
+        login.createUser = createUser
+  
+        const form = screen.getByTestId("form-employee")
+        fireEvent.submit(form)
+        expect(checkIfUserExists).toHaveBeenCalled()
+        expect(createUser).not.toHaveBeenCalled()
+  
+      })
+    })
 
     describe("When user doesn't exist", () => { 
       test("Then user should be created", () => {
@@ -153,11 +192,7 @@ describe("Given that I am a user on login page", () => {
         const createUser = jest.fn()
         login.createUser = createUser
 
-        // const handleSubmitEmployee = jest.fn()
-        // login.handleSubmitEmployee = handleSubmitEmployee
-
         const form = screen.getByTestId("form-employee")
-       // form.addEventListener("submit", handleSubmitEmployee)
         fireEvent.submit(form)
         expect(checkIfUserExists).toHaveBeenCalled()
         expect(createUser).toHaveBeenCalled()
@@ -275,11 +310,55 @@ describe("Given that I am a user on login page", () => {
     test("It should renders HR dashboard page", () => {
       expect(screen.queryByText('Validations')).toBeTruthy()
     })
-
   })
   
-  describe("When user doesn't exist", () => { 
-    test("Then user should be created", () => {
+  describe("When user exists", () => { 
+    test("Then user should not be created", () => {
+      document.body.innerHTML = LoginUI()
+
+      // localStorage should be populated with form data
+      Object.defineProperty(window, "localStorage", {
+        value: {
+          getItem: jest.fn(() => null),
+          setItem: jest.fn(() => null)
+        },
+        writable: true
+      })
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      let PREVIOUS_LOCATION = ''
+
+      const firebase = jest.fn()
+
+      const login = new Login({
+        document,
+        localStorage: window.localStorage,
+        onNavigate,
+        PREVIOUS_LOCATION,
+        firebase
+      })
+
+      const checkIfUserExists = jest.fn()
+      login.checkIfUserExists = checkIfUserExists
+      checkIfUserExists.mockImplementation(() => true)
+
+      const createUser = jest.fn()
+      login.createUser = createUser
+
+      const form = screen.getByTestId("form-admin")
+      fireEvent.submit(form)
+      expect(checkIfUserExists).toHaveBeenCalled()
+      expect(createUser).not.toHaveBeenCalled()
+
+    })
+  })
+
+
+  describe("When user doesnt exist", () => { 
+    test("Then user should  be created", () => {
       document.body.innerHTML = LoginUI()
 
       // localStorage should be populated with form data
@@ -314,11 +393,7 @@ describe("Given that I am a user on login page", () => {
       const createUser = jest.fn()
       login.createUser = createUser
 
-      // const handleSubmitEmployee = jest.fn()
-      // login.handleSubmitEmployee = handleSubmitEmployee
-
       const form = screen.getByTestId("form-admin")
-     // form.addEventListener("submit", handleSubmitEmployee)
       fireEvent.submit(form)
       expect(checkIfUserExists).toHaveBeenCalled()
       expect(createUser).toHaveBeenCalled()

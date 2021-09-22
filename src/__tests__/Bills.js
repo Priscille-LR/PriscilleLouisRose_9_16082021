@@ -130,6 +130,22 @@ describe("Given I am connected as an employee", () => {
   describe("When I click on the 'Icon Eye' ", () => {
 
     //FUNCTION CALL handleClickIconEye()
+    describe('And icon does not exist', () => {
+      test("Then handleClickIConEye() should not be called", () => {
+        document.body.innerHTML = `<div id="root"><h1>Hey</h1></div>`;
+        const testBills = new Bills({ document, onNavigate, firestore: null, localStorage: window.localStorage })
+    
+        const testHandleClickIconEye = jest.fn()
+        testBills.handleClickIconEye = testHandleClickIconEye
+    
+        try {
+          const iconEye = screen.getAllByTestId("icon-eye")[0]
+          userEvent.click(iconEye)
+        } catch(e) {
+          expect(testHandleClickIconEye).not.toHaveBeenCalled();
+        }
+      })
+    });
 
     test("Then handleClickIConEye() should be called", () => {
       const html = BillsUI({ data: bills })
@@ -198,18 +214,12 @@ describe("Given I am a user connected as Employee", () => {
 
 
     test("fetches bills from an API and fails with 404 message error", async () => {
-      // firebase.get.mockImplementationOnce(() =>
-      //   Promise.reject(new Error("Erreur 404"))
-      // )
       const html = BillsUI({ error: "Erreur 404" })
       document.body.innerHTML = html
       const message = await screen.getByText(/Erreur 404/) //depends only from bills UI and not firebase
       expect(message).toBeTruthy()
     })
     test("fetches messages from an API and fails with 500 message error", async () => {
-      // firebase.get.mockImplementationOnce(() =>
-      //   Promise.reject(new Error("Erreur 500"))
-      // )
       const html = BillsUI({ error: "Erreur 500" })
       document.body.innerHTML = html
       const message = await screen.getByText(/Erreur 500/)

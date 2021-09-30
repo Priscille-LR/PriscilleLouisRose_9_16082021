@@ -7,6 +7,25 @@ Reprendre un projet et mettre en place:
 - Test unitaires et d’intégration pour augmenter la couverture de tests
 - Rédaction test End-to-End pour le parcours Employé
 
+## Installation
+
+Installez les packages npm (décrits dans `package.json`) :
+```
+$ npm install
+```
+
+Installez live-server pour lancer un serveur local :
+```
+$ npm install -g live-server
+```
+
+Lancez l'application :
+```
+$ live-server
+```
+
+Puis allez à l'adresse : `http://127.0.0.1:8080/`
+
 ## Couverture de test avant / après :
 avant :  TODO
 

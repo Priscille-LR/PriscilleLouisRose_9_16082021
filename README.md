@@ -1,50 +1,30 @@
-**Comment lancer l'application en local** :
+# Billed : gestion des notes de frais
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)  ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+## Objectif
 
-Clonez le projet :
-```
-$ git clone https://github.com/OpenClassrooms-Student-Center/Billed-app-FR.git
-```
+Reprendre un projet et mettre en place:
+- Test unitaires et d’intégration pour augmenter la couverture de tests
+- Rédaction test End-to-End pour le parcours Employé
 
-Allez au repo cloné :
-```
-$ cd Billed-app-FR
-```
+## Couverture de test avant / après :
+avant :  TODO
 
-Installez les packages npm (décrits dans `package.json`) :
-```
-$ npm install
-```
+après : TODO
 
-Installez live-server pour lancer un serveur local :
-```
-$ npm install -g live-server
-```
+## Couverture de test globale
+TODO
 
-Lancez l'application :
-```
-$ live-server
-```
+## Exemple de rédaction tests
 
-Puis allez à l'adresse : `http://127.0.0.1:8080/`
+***Scénario 1***
 
+> **Given** Je suis un visiteur (non connecté)  
+> **When** Je ne remplis pas le champ e-mail ou le champ password du login employé et je clique sur le bouton Se Connecter  
+> **Then** Je reste sur la page Login et je suis invité à remplir le champ manquant
 
-**Comment lancer tous les tests en local avec Jest :**
+***Scénario 2***
 
-```
-$ npm run test
-```
-
-**Comment lancer un seul test :**
-
-Installez jest-cli :
-
-```
-$npm i -g jest-cli
-$jest src/__tests__/your_test_file.js
-```
-
-**Comment voir la couverture de test :**
-
-`http://127.0.0.1:8080/coverage/lcov-report/`
-
-
+> **Given** Je suis un visiteur (non connecté)  
+> **When** Je remplis le champ e-mail du login employé au mauvais format (sans la forme chaîne@chaîne) et je clique sur le bouton Se connecter  
+> **Then** Je reste sur la page Login et je suis invité à remplir le champ e-mail au bon format
